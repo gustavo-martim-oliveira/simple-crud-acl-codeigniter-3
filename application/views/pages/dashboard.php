@@ -5,13 +5,14 @@
       <div class="container-fluid py-3">
         <div class="row">
           <div class="col-md-4 col-lg-3">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Usuários</h5>
-  				<p class="card-text"><strong><?= count($users) ?></strong> usuários cadastrados</p>
-              </div>
-            </div>
-
+						<?php if(can('users_view')){ ?>
+							<div class="card">
+								<div class="card-body">
+									<h5 class="card-title">Usuários</h5>
+									<p class="card-text"><strong><?= count($users) ?></strong> usuários cadastrados</p>
+								</div>
+							</div>
+						<?php } ?>
             <div class="card card-primary card-outline">
               <div class="card-body">
                 <h5 class="card-title">Card title</h5>

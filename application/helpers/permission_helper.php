@@ -12,7 +12,7 @@ function cannot(string $permission){
 	return $cannot->cannot((string) $permission);
 }
 
-function getRole(){
+function getRole(int $user_id = null){
 	$role = new RolePermission;
-	return $role->getRole();
+	return $role->getRole($user_id);
 }

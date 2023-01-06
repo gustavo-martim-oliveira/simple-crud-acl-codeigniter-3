@@ -35,7 +35,7 @@ class RolePermission extends Auth{
 		}
 		
 		#Check if permission and role is false
-		if(!$permission && !$role){
+		if(!$permission && $role or !$permission && !$role){
 			return false;
 		}
 
@@ -106,10 +106,15 @@ class RolePermission extends Auth{
 	 *
 	 * @return void
 	 */
-	public function getUserRole(){
+	public function getUserRole(int $user_id = null){
 		$CI = get_instance();
 		$CI->load->model($this->model);
-		return $CI->permission->user_role($this->user->id) ?? false;
+
+		$id = $this->user->id;
+		if($user_id != null){
+			$id = (int) $user_id;
+		}
+		return $CI->permission->user_role($id) ?? false;
 	}
 
 	/**
@@ -117,8 +122,8 @@ class RolePermission extends Auth{
 	 *
 	 * @return void
 	 */
-	public function getRole(){
-		$id = $this->getUserRole();
+	public function getRole(int $user_id = null){
+		$id = $this->getUserRole($user_id);
 		$CI = get_instance();
 		$CI->load->model($this->model);
 		return $CI->permission->roles($id->role_id) ?? false;

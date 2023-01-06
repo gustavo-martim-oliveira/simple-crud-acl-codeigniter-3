@@ -124,5 +124,26 @@ class Permission extends CI_Model {
 		$this->db->where('title', $permission);
 		return $this->db->get($this->permissions)->result()[0] ?? false;
 	}
+
+	public function setUserRole(int $user_id, int $role_id){
+
+		$this->db->where('user_id', $user_id);
+		$result = $this->db->get($this->users_role)->result()[0];
+
+		if($result){
+			$this->db->update($this->users_role, [
+				'user_id' => $user_id,
+				'role_id' => $role_id
+			], array('id' => $result->id));
+		}else{
+			$data = [
+				'user_id' => $user_id,
+				'role_id' => $role_id
+			];
+			return $this->db->insert($this->users_role, $data);
+		}
+
+		
+	}
 	
 }

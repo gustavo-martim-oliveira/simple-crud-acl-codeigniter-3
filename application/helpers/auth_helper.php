@@ -7,7 +7,7 @@ function auth_user(){
 }
 
 function auth_id(){
-	return Auth::id();
+	return (int) Auth::id();
 }
 
 function auth_check(){
