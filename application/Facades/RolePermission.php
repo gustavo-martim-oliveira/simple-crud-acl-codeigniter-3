@@ -29,11 +29,20 @@ class RolePermission extends Auth{
 		#Retrieve the user role if exists
 		$role = $this->getUserRole();
 
+		if(!$role){
+			return false;
+		}
+
 		#Set super admin mode
 		if((int) $role->role_id === 1){
 			return true;
 		}
 		
+		#check if the rule are setted
+		if(is_bool($role) && !$role){
+			return false;
+		}
+
 		#Check if permission and role is false
 		if(!$permission && $role or !$permission && !$role){
 			return false;
@@ -126,7 +135,10 @@ class RolePermission extends Auth{
 		$id = $this->getUserRole($user_id);
 		$CI = get_instance();
 		$CI->load->model($this->model);
-		return $CI->permission->roles($id->role_id) ?? false;
+		if($id != false){
+			return $CI->permission->roles($id->role_id) ?? null;
+		}
+		return 0;
 	}
 
 }

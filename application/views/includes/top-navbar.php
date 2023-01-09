@@ -23,9 +23,9 @@
 	<?php
 	if(can('permissions_view')){
 	?>
-			<li class="nav-item d-none d-sm-inline-block">
-				<a href="#" class="nav-link">Permissões de acesso</a>
-			</li>
+		<li class="nav-item d-none d-sm-inline-block">
+			<a href="<?= base_url('permissions') ?>" class="nav-link">Permissões de acesso</a>
+		</li>
 	<?php
 	}
 	?>

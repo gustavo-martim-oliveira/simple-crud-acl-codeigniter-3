@@ -34,6 +34,12 @@ class Users extends CI_Controller {
 	}
 
 	public function store(){
+
+		if(cannot('users_create')){
+			$this->session->set_flashdata('error', 'Você não tem permissão para realizar esta ação');
+			return redirect('users');
+		}
+
 		#Store a old form data
 		$this->session->set_flashdata('__formOld', $_POST);
 
@@ -53,14 +59,14 @@ class Users extends CI_Controller {
 
 		#Check if email exists
 		$email_exists = $this->user->getUserByEmail($request['email']);
-		if(count((array) $email_exists) >= 1){
+		if($email_exists && count((array) $email_exists) >= 1){
 			$this->session->set_flashdata('error', 'Este email já está em uso');
 			return redirect('users/create');
 		}
 
 		#Check if login exists
 		$login_exists = $this->user->getUserByLogin($request['login']);
-		if(count((array) $login_exists) >= 1){
+		if($login_exists && count((array) $login_exists) >= 1){
 			$this->session->set_flashdata('error', 'Este login já está em uso');
 			return redirect('users/create');
 		}
@@ -89,6 +95,12 @@ class Users extends CI_Controller {
 	}
 
 	public function edit($id){
+
+		if(cannot('users_update')){
+			$this->session->set_flashdata('error', 'Você não tem permissão para realizar esta ação');
+			return redirect('users');
+		}
+
 		$this->load->model('user');
 		$user = $this->user->getUser($id);
 
@@ -106,11 +118,20 @@ class Users extends CI_Controller {
 	}
 
 	public function update($id){
+
+		if(cannot('users_update')){
+			$this->session->set_flashdata('error', 'Você não tem permissão para realizar esta ação');
+			return redirect('users');
+		}
+
 		#Store a old form data
 		$this->session->set_flashdata('__formOld', $_POST);
 
 		#Load model
 		$this->load->model('user');
+		$this->load->model('permission');
+
+		
 
 		#filter all inputs data
 		$request = $this->dataFilter($_POST);
@@ -121,6 +142,16 @@ class Users extends CI_Controller {
 		#check if is validated
 		if(!$validate){
 			return $validate;
+		}
+
+		//Check if is a superadmin
+		if(getRole($id)->id == 1 && $request['level'] != 1){
+			//Search if exists another superadmin
+			$admins = $this->permission->user_role(null, true);
+			if(count((array) $admins) <= 1){
+				$this->session->set_flashdata('error', 'O nível do usuário não pode ser alterado, é necessário ter pelo menos 1 super administrador');
+				return redirect('users/edit/' . $id);
+			}
 		}
 
 		#Check if email exists
@@ -166,6 +197,12 @@ class Users extends CI_Controller {
 	}
 
 	public function destroy($id){
+
+		if(cannot('users_delete')){
+			$this->session->set_flashdata('error', 'Você não tem permissão para realizar esta ação');
+			return redirect('users');
+		}
+
 		$request = $_POST;
 		$id = (int) $id ?? $request['id'];
 		
@@ -175,6 +212,18 @@ class Users extends CI_Controller {
 		}
 
 		$this->load->model('user');
+		$this->load->model('permission');
+
+		//Check if is a superadmin
+		if(getRole($id)->id == 1){
+			//Search if exists another superadmin
+			$admins = $this->permission->user_role(null, true);
+			if(count((array) $admins) <= 1){
+				$this->session->set_flashdata('error', 'Este usuário não pode ser excluído, é necessário ter pelo menos 1 super administrador');
+				return redirect('users');
+			}
+		}
+
 		$this->user->destroy($id);
 
 		$this->session->set_flashdata('success', 'Usuário excluído com sucesso!');

@@ -25,20 +25,33 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<label>Nível do usuário</label>
-								<select class="form-control select2" name="level" style="width: 100%;" required>
-  									<?php
-									foreach($roles as $role){
-									?>
-
-									<?php if($role->id == 1 && getRole()->id == 1 or $role->id != 1){ ?>
-										<option value="<?=$role->id?>" <?=(isset($_SESSION['__formOld']['level']) && $_SESSION['__formOld']['level'] == $role->id ? 'selected' : (getRole($user->id)->id == $role->id ? 'selected' : '' ))?>><?=$role->title?></option>
-									<?php }?>
-
-									<?php
-									}
-									?>
-									
+								<?php
+								if(getRole(auth_id()) != false && getRole(auth_id())->id != 1 && getRole($user->id) != false && getRole($user->id)->id == 1){
+								?>
+								<select class="form-control select2" disabled name="level" style="width: 100%;" required>
+									<option value="1" selected disabled>Super Admin</option>
 								</select>
+								<?php
+								}else{
+								?>
+									<select class="form-control select2" name="level" style="width: 100%;" required>
+										<?php
+										foreach($roles as $role){
+										?>
+
+										<?php if(getRole() != false && $role->id == 1 && getRole()->id == 1 or $role->id != 1){ ?>
+											<option value="<?=$role->id?>" <?=(isset($_SESSION['__formOld']['level']) && $_SESSION['__formOld']['level'] == $role->id ? 'selected' : (getRole($user->id) != false && getRole($user->id)->id == $role->id ? 'selected' : '' ))?>><?=$role->title?></option>
+										<?php }?>
+
+										<?php
+										}
+										?>
+										
+									</select>
+								<?php
+								}
+								?>
+								
 							</div>
 						</div>
 

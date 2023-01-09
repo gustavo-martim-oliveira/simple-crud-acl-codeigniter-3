@@ -101,9 +101,16 @@ class Permission extends CI_Model {
 	 * of table users & roles
 	 *
 	 * @param integer|null $user_id
+	 * @param boolean $onlySuperAdmins
 	 * @return void
 	 */
-	public function user_role(int $user_id = null){
+	public function user_role(int $user_id = null, $onlySuperAdmins = false){
+
+		if($onlySuperAdmins){
+			$this->db->where('role_id', 1);
+			return $this->db->get($this->users_role)->result() ?? false;
+		}
+
 		if($user_id != null){
 			$this->db->where('user_id', $user_id);
 			return $this->db->get($this->users_role)->result()[0] ?? false;
@@ -145,5 +152,60 @@ class Permission extends CI_Model {
 
 		
 	}
-	
+
+	public function unsetUserRoles(int $user_id){
+		$this->db->where('user_id', $user_id);
+		return $this->db->delete($this->users_role);
+	}
+
+	public function unsetUserPermission(int $user_id){
+		$this->db->where('user_id', $user_id);
+		return $this->db->delete($this->users_permission);
+	}
+
+	public function unsetRolesPermission(int $role_id){
+		$this->db->where('role_id', $role_id);
+		return $this->db->delete($this->roles_permission);
+	}
+
+	public function storeRole(string $role){
+		$this->db->insert($this->roles, ['title' => $role]);
+		return $this->db->insert_id();
+	}
+
+	public function storeRolePermission(int $role_id, int $permission_id){
+		return $this->db->insert($this->roles_permission, ['role_id' => $role_id, 'permission_id' => $permission_id]);
+	}
+
+	public function updateRole(string $title, int $id){
+		return $this->db->update($this->roles, ['title' => $title], array('id' => $id));
+	}
+
+	public function destroyRole(int $role){
+		
+		try{
+			$this->db->where('role_id', $role);
+			$this->db->delete($this->roles_permission);
+
+			$this->db->where('role_id', $role);
+			$this->db->delete($this->users_role);
+
+			$this->db->where('id', $role);
+			$this->db->delete($this->roles);
+
+			return true;
+		}catch(Exception $e){
+			return false;
+		}
+		
+
+	}
+
+	public function syncPermissions(int $role_id, array $permissions){
+		$this->unsetRolesPermission($role_id);
+		foreach($permissions as $key => $value){
+			$permission = $this->permissionByName($key);
+			$this->storeRolePermission($role_id, $permission->id);
+		}
+	}
 }

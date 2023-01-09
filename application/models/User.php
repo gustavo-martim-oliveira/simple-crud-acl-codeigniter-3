@@ -44,6 +44,10 @@ class User extends CI_Model {
 		return $this->db->get($this->table)->result()[0] ?? false;
 	}
 
+	public function where(array $where){
+		return $this->db->get_where($this->table, $where);
+	}
+
 	public function auth($email, $password){
 		$this->db->where('email', $email);
 		$user = $this->db->get($this->table)->result()[0];
@@ -54,7 +58,7 @@ class User extends CI_Model {
 	}
 
 	public function store($request){
-		$this->db->insert($this->table, $data);
+		$this->db->insert($this->table, $request);
 		return $this->db->insert_id();
 	}
 
