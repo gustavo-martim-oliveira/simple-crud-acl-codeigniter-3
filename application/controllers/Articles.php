@@ -1,11 +1,8 @@
 <?php
 
 use Application\Facades\Image;
-use Application\Facades\Traits\UploadImage;
 
 class Articles extends CI_Controller {
-
-	use UploadImage;
 
 	public function __construct(){
 		Parent::__construct();
