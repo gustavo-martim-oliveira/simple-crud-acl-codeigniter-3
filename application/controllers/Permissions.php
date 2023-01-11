@@ -71,6 +71,9 @@ class Permissions extends CI_Controller {
 			$this->session->set_flashdata('error', 'Você não tem permissão para realizar esta ação');
 			return redirect('permissions');
 		}
+
+		if($id == 1) return redirect('permissions');
+
 		$this->load->model('permission');
 
 		$role = $this->permission->roles($id);

@@ -129,9 +129,7 @@ class Users extends CI_Controller {
 
 		#Load model
 		$this->load->model('user');
-		$this->load->model('permission');
-
-		
+		$this->load->model('permission');		
 
 		#filter all inputs data
 		$request = $this->dataFilter($_POST);
@@ -144,9 +142,9 @@ class Users extends CI_Controller {
 			return $validate;
 		}
 
-		//Check if is a superadmin
+		#Check if is a superadmin
 		if(getRole($id)->id == 1 && $request['level'] != 1){
-			//Search if exists another superadmin
+			#Search if exists another superadmin
 			$admins = $this->permission->user_role(null, true);
 			if(count((array) $admins) <= 1){
 				$this->session->set_flashdata('error', 'O nível do usuário não pode ser alterado, é necessário ter pelo menos 1 super administrador');
@@ -158,14 +156,14 @@ class Users extends CI_Controller {
 		$email_exists = $this->user->getUserByEmail($request['email']);
 		if(count((array) $email_exists) >= 1 && $request['email'] != auth_user()->email){
 			$this->session->set_flashdata('error', 'Este email já está em uso');
-			// return redirect('users/create');
+			return redirect('users/create');
 		}
 
 		#Check if login exists
 		$login_exists = $this->user->getUserByLogin($request['login']);
 		if(count((array) $login_exists) >= 1 && $request['email'] != auth_user()->login){
 			$this->session->set_flashdata('error', 'Este login já está em uso');
-			// return redirect('users/create');
+			return redirect('users/create');
 		}
 
 		#separate level from user Array

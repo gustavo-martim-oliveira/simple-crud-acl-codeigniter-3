@@ -1,7 +1,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
 	<!-- Brand Logo -->
-	<a href="index3.html" class="brand-link">
+	<a href="<?= base_url('dashboard') ?>" class="brand-link">
 		<span class="brand-text font-weight-light">CRUD</span>
 	</a>
 
@@ -60,7 +60,7 @@
 				if(can('categories_view')){
 				?>
 					<li class="nav-item ">
-						<a href="#" class="nav-link">
+						<a href="<?= base_url('categories') ?>" class="nav-link">
 							<i class="nav-icon fas fa-th"></i>
 							<p>
 								Categorias
@@ -75,7 +75,7 @@
 				if(can('articles_view')){
 				?>
 					<li class="nav-item ">
-						<a href="#" class="nav-link">
+						<a href="<?= base_url('articles') ?>" class="nav-link">
 							<i class="nav-icon fas fa-th"></i>
 							<p>
 								Artigos

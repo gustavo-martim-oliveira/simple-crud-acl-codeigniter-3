@@ -33,9 +33,9 @@
 	<?php
 	if(can('categories_view')){
 	?>
-			<li class="nav-item d-none d-sm-inline-block">
-				<a href="#" class="nav-link">Categorias</a>
-			</li>
+		<li class="nav-item d-none d-sm-inline-block">
+			<a href="<?= base_url('categories') ?>" class="nav-link">Categorias</a>
+		</li>
 	<?php
 	}
 	?>
@@ -43,9 +43,9 @@
 	<?php
 	if(can('articles_view')){
 	?>
-			<li class="nav-item d-none d-sm-inline-block">
-				<a href="#" class="nav-link">Artigos</a>
-			</li>
+		<li class="nav-item d-none d-sm-inline-block">
+			<a href="<?= base_url('articles') ?>" class="nav-link">Artigos</a>
+		</li>
 	<?php
 	}
 	?>
